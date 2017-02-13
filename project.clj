@@ -16,9 +16,11 @@
    :resource-dirs ["static"]
    :functions
    [{:name   "promise-hang"
-     :invoke promise-timeout-hang.core/promise-hang}
+     :invoke promise-timeout-hang.core/promise-hang
+     :timeout 3}
     {:name   "promise-timeout"
-     :invoke promise-timeout-hang.core/promise-timeout}]}
+     :invoke promise-timeout-hang.core/promise-timeout
+     :timeout 3}]}
   :cljsbuild
   {:builds [{:id "promise-timeout-hang"
              :source-paths ["src"]
