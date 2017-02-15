@@ -9,7 +9,8 @@
             [lein-npm       "0.6.0"]
             [lein-doo       "0.1.7"]
             [io.nervous/lein-cljs-lambda "0.6.4"]]
-  :npm {:dependencies [[source-map-support "0.4.0"]]}
+  :npm {:dependencies [[source-map-support "0.4.0"]
+                       [bluebird           "3.4.7"]]}
   :source-paths ["src"]
   :cljs-lambda
   {:defaults      {:role "FIXME"}
@@ -17,9 +18,6 @@
    :functions
    [{:name   "promise-hang"
      :invoke promise-timeout-hang.core/promise-hang
-     :timeout 3}
-    {:name   "promise-timeout"
-     :invoke promise-timeout-hang.core/promise-timeout
      :timeout 3}]}
   :cljsbuild
   {:builds [{:id "promise-timeout-hang"

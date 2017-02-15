@@ -1,28 +1,27 @@
 # promise-timeout-hang
+This creates a Lambda functions for testing if they will hang after initial 
+invocation when the function memory is 128 MB.
 
-## Deploying
+## Requirements to build
+ * https://leiningen.org/
+ * https://www.npmjs.com/
 
-Run `lein cljs-lambda default-iam-role` if you don't have yet have suitable
-execution role to place in your project file.  This command will create an IAM
-role under your default (or specified) AWS CLI profile, and modify your project
-file to specify it as the execution default.
+To build and deploy:
 
-Otherwise, add an IAM role ARN under the function's `:role` key in the
-`:functions` vector of your profile file, or in `:cljs-lambda` -> `:defaults` ->
-`:role`.
+    ./deploy.sh <s3_bucket_name>
 
-Then:
+## Causing the hang
+The function will stop responding if you invoke with a value that will cause a Lambda global timeout. Afterwards even if the event timeout is short enough, the function will not return again. If more memory is applied the function works again.
 
-```sh
-$ lein cljs-lambda deploy
-$ lein cljs-lambda invoke work-magic ...
 ```
+ARN=<function arn>
 
-## Testing
+# Verify it is working
+aws lambda invoke --function-name "${ARN}" --payload '{"timeout":1}' --query "LogResult" --log-type Tail --output text /dev/null | base64 -d
 
-```sh
-lein doo node promise-timeout-hang-test
+# Now break it
+aws lambda invoke --function-name "${ARN}" --payload '{"timeout":6000}' --query "LogResult" --log-type Tail --output text /dev/null | base64 -d
+
+#  Broken
+aws lambda invoke --function-name "${ARN}" --payload '{"timeout":1}' --query "LogResult" --log-type Tail --output text /dev/null | base64 -d
 ```
-
-Doo is provided to avoid including code to set the process exit code after a
- test run.

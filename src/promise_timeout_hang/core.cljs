@@ -9,13 +9,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 
-(deflambda promise-hang [input ctx]
+(deflambda promise-hang [{:keys [timeout] :as input} ctx]
            (prn "Starting function")
-           (-> (p/delay 5000)
-               (p/then (fn [] (prn "Finished function")))))
-
-(deflambda promise-timeout [input ctx]
-           (prn "Starting function")
-           (-> (p/delay 5000)
-               (p/timeout 2000)
+           (-> (p/delay timeout)
                (p/then (fn [] (prn "Finished function")))))
